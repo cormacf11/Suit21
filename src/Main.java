@@ -17,7 +17,11 @@ public class Main {
         for (int i = 1; i <= numPlayers; i++) {
             System.out.print("Enter name for Player " + i + ": ");
             String name = scanner.nextLine();
-            players.add(new Player(name));
+            if (name.equalsIgnoreCase("Computer")) {
+                players.add(new ComputerPlayer(name));
+            } else {
+                players.add(new Player(name));
+            }
         }
 
         // Input number of games
@@ -47,27 +51,10 @@ public class Main {
                     System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
 
                     if (maxSuitScore.getValue() == 21) {
-                        System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!");
+                        System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!" + "\n");
                         roundWinners.add(player);
                     } else {
-                        System.out.println("Would you like to swap a card? (yes/no)");
-                        String choice = scanner.nextLine().trim().toLowerCase();
-
-                        if (choice.equals("yes")) {
-                            System.out.println("Enter the index (1-5) of the card to swap: ");
-                            int cardIndex;
-                            do {
-                                cardIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                                scanner.nextLine(); // Consume newline
-                            } while (cardIndex < 0 || cardIndex >= player.getHand().size());
-
-                            Card newCard = deck.dealHand(1).get(0);
-                            Card removedCard = player.swapCard(cardIndex, newCard);
-                            System.out.println("Swapped out " + removedCard + " for " + newCard);
-                            System.out.println("Updated hand: " + player);
-                        } else {
-                            System.out.println("Hand stayed the same: " + player);
-                        }
+                        player.makeDecision(deck);
                     }
                 }
 
