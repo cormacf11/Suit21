@@ -7,6 +7,23 @@ public class Card {
         this.rank = rank;
     }
 
+    public String getSuit() {
+        return suit;
+    }
+
+    public int getValue() {
+        switch (rank) {
+            case "Ace":
+                return 11;
+            case "King":
+            case "Queen":
+            case "Jack":
+                return 10;
+            default:
+                return Integer.parseInt(rank);
+        }
+    }
+
     @Override
     public String toString() {
         return rank + " of " + suit;

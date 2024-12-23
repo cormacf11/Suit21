@@ -13,6 +13,15 @@ public class Player {
         this.hand = hand;
     }
 
+    public Map.Entry<String, Integer> getMaxScoreAndSuit() {
+        Map<String, Integer> suitScores = new HashMap<>();
+        for (Card card : hand) {
+            int value = card.getValue();
+            suitScores.put(card.getSuit(), suitScores.getOrDefault(card.getSuit(), 0) + value);
+        }
+        return suitScores.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);
+    }
+
     @Override
     public String toString() {
         return name + "'s hand: " + hand;

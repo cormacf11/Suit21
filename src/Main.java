@@ -29,9 +29,11 @@ public class Main {
             player.setHand(deck.dealHand(5));
         }
 
-        // Display each player's hand
+        // Display each player's hand and maximum score from a single suit
         for (Player player : players) {
             System.out.println(player);
+            Map.Entry<String, Integer> maxSuitScore = player.getMaxScoreAndSuit();
+            System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
         }
     }
 }
