@@ -29,6 +29,8 @@ public class Main {
         int numGames = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
+        List<List<RoundRecord>> gameHistory = new ArrayList<>();
+
         // Play the specified number of games
         for (int game = 1; game <= numGames; game++) {
             System.out.println("\nStarting game " + game + "...");
@@ -44,18 +46,25 @@ public class Main {
 
             boolean gameWon = false;
             List<Player> roundWinners = new ArrayList<>();
+            List<RoundRecord> roundHistory = new ArrayList<>();
+
             while (!gameWon && deck.remainingCards() >= players.size()) {
                 for (Player player : players) {
                     System.out.println(player);
                     Map.Entry<String, Integer> maxSuitScore = player.getMaxScoreAndSuit();
                     System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
 
+                    String decision = "kept their hand";
                     if (maxSuitScore.getValue() == 21) {
                         System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!" + "\n");
                         roundWinners.add(player);
                     } else {
                         player.makeDecision(deck);
+                        decision = "swapped a card";
                     }
+
+                    // Record round data
+                    roundHistory.add(new RoundRecord(player.getName(), new ArrayList<>(player.getHand()), maxSuitScore, decision));
                 }
 
                 if (!roundWinners.isEmpty()) {
@@ -72,6 +81,8 @@ public class Main {
             if (!gameWon) {
                 System.out.println("No one scored 21 and there are not enough cards left for another round. Game ends in a draw.");
             }
+
+            gameHistory.add(roundHistory);
         }
 
         // Display final scores
@@ -80,5 +91,29 @@ public class Main {
         for (Player player : players) {
             System.out.println(player.getName() + ": " + player.getPoints() + " points");
         }
+
+        // Replay games
+        System.out.print("Would you like to view a replay of any game? (yes/no): ");
+        String replayChoice = scanner.nextLine().trim().toLowerCase();
+        while (replayChoice.equals("yes")) {
+            System.out.print("Enter the game number (1 to " + numGames + "): ");
+            int gameNumber = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            if (gameNumber >= 1 && gameNumber <= numGames) {
+                System.out.println("\nReplay of game " + gameNumber + ":");
+                List<RoundRecord> roundHistory = gameHistory.get(gameNumber - 1);
+                for (RoundRecord record : roundHistory) {
+                    System.out.println(record);
+                }
+            } else {
+                System.out.println("Invalid game number.");
+            }
+
+            System.out.print("Would you like to view another replay? (yes/no): ");
+            replayChoice = scanner.nextLine().trim().toLowerCase();
+        }
+
+        System.out.println("Thank you for playing Suit 21!");
     }
 }
