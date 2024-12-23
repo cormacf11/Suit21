@@ -17,6 +17,10 @@ public class Player {
         return hand;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Card swapCard(int index, Card newCard) {
         return hand.set(index, newCard);
     }

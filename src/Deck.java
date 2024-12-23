@@ -1,4 +1,5 @@
 import java.util.*;
+
 public class Deck {
     private List<Card> cards;
 
@@ -24,5 +25,9 @@ public class Deck {
             hand.add(cards.remove(0));
         }
         return hand;
+    }
+
+    public int remainingCards() {
+        return cards.size();
     }
 }
