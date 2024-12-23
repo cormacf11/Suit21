@@ -13,6 +13,14 @@ public class Player {
         this.hand = hand;
     }
 
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    public Card swapCard(int index, Card newCard) {
+        return hand.set(index, newCard);
+    }
+
     public Map.Entry<String, Integer> getMaxScoreAndSuit() {
         Map<String, Integer> suitScores = new HashMap<>();
         for (Card card : hand) {
