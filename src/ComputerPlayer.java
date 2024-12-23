@@ -46,7 +46,7 @@ public class ComputerPlayer extends Player {
             Card newCard = deck.dealHand(1).get(0);
             Card removedCard = swapCard(index, newCard);
             System.out.println(getName() + " swapped out " + removedCard
-                    + " for " + newCard + "\n");
+                    + " for " + newCard);
         } else {
             // If we couldn't find a decent card to discard, we’ll just keep the hand
             System.out.println(getName() + " decided to keep the hand: " + this + "\n");

@@ -50,19 +50,21 @@ public class Player {
         String choice = scanner.nextLine().trim().toLowerCase();
 
         if (choice.equals("yes")) {
-            System.out.println("Enter the index (1-5) of the card to swap: ");
+            System.out.println("Please nominate a card to swap (A-E): ");
+            char cardChoice;
             int cardIndex;
+
             do {
-                cardIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                scanner.nextLine(); // Consume newline
-            } while (cardIndex < 0 || cardIndex >= hand.size());
+                cardChoice = scanner.nextLine().trim().toUpperCase().charAt(0);
+                cardIndex = cardChoice - 'A';
+            } while (cardIndex < 0 || cardIndex >= getHand().size());
 
             Card newCard = deck.dealHand(1).get(0);
             Card removedCard = swapCard(cardIndex, newCard);
             System.out.println("Swapped out " + removedCard + " for " + newCard);
-            System.out.println("Updated hand: " + this + "\n");
+            System.out.println("Updated hand: " + this);
         } else {
-            System.out.println("Hand stayed the same: " + this + "\n");
+            System.out.println("Hand stayed the same: " + this);
         }
     }
 

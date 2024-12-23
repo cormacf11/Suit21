@@ -13,6 +13,23 @@ public class RoundRecord {
         this.decision = decision;
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    public String getDecision() {
+        return decision;
+    }
+
+    public Map.Entry<String, Integer> getMaxSuitScore() {
+        return maxSuitScore;
+    }
+
+
     @Override
     public String toString() {
         return playerName + "'s hand: " + hand + " | Maximum score: " + maxSuitScore.getValue() + " (" + maxSuitScore.getKey() + ") | Decision: " + decision;
