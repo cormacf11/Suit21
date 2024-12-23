@@ -20,61 +20,78 @@ public class Main {
             players.add(new Player(name));
         }
 
-        // Create and shuffle the deck
-        Deck deck = new Deck();
-        deck.shuffle();
+        // Input number of games
+        System.out.print("Enter the number of games to play: ");
+        int numGames = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
 
-        // Deal 5 cards to each player
-        for (Player player : players) {
-            player.setHand(deck.dealHand(5));
-        }
+        // Play the specified number of games
+        for (int game = 1; game <= numGames; game++) {
+            System.out.println("\nStarting game " + game + "...");
 
-        boolean gameWon = false;
-        List<Player> roundWinners = new ArrayList<>();
-        while (!gameWon && deck.remainingCards() >= players.size()) {
+            // Create and shuffle the deck
+            Deck deck = new Deck();
+            deck.shuffle();
+
+            // Deal 5 cards to each player
             for (Player player : players) {
-                System.out.println(player);
-                Map.Entry<String, Integer> maxSuitScore = player.getMaxScoreAndSuit();
-                System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
+                player.setHand(deck.dealHand(5));
+            }
 
-                if (maxSuitScore.getValue() == 21) {
-                    System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!");
-                    roundWinners.add(player);
-                } else {
-                    System.out.println("Would you like to swap a card? (yes/no)");
-                    String choice = scanner.nextLine().trim().toLowerCase();
+            boolean gameWon = false;
+            List<Player> roundWinners = new ArrayList<>();
+            while (!gameWon && deck.remainingCards() >= players.size()) {
+                for (Player player : players) {
+                    System.out.println(player);
+                    Map.Entry<String, Integer> maxSuitScore = player.getMaxScoreAndSuit();
+                    System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
 
-                    if (choice.equals("yes")) {
-                        System.out.println("Enter the index (1-5) of the card to swap: ");
-                        int cardIndex;
-                        do {
-                            cardIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                            scanner.nextLine(); // Consume newline
-                        } while (cardIndex < 0 || cardIndex >= player.getHand().size());
-
-                        Card newCard = deck.dealHand(1).get(0);
-                        Card removedCard = player.swapCard(cardIndex, newCard);
-                        System.out.println("Swapped out " + removedCard + " for " + newCard);
-                        System.out.println("Updated hand: " + player);
+                    if (maxSuitScore.getValue() == 21) {
+                        System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!");
+                        roundWinners.add(player);
                     } else {
-                        System.out.println("Hand stayed the same: " + player);
+                        System.out.println("Would you like to swap a card? (yes/no)");
+                        String choice = scanner.nextLine().trim().toLowerCase();
+
+                        if (choice.equals("yes")) {
+                            System.out.println("Enter the index (1-5) of the card to swap: ");
+                            int cardIndex;
+                            do {
+                                cardIndex = scanner.nextInt() - 1; // Convert to zero-based index
+                                scanner.nextLine(); // Consume newline
+                            } while (cardIndex < 0 || cardIndex >= player.getHand().size());
+
+                            Card newCard = deck.dealHand(1).get(0);
+                            Card removedCard = player.swapCard(cardIndex, newCard);
+                            System.out.println("Swapped out " + removedCard + " for " + newCard);
+                            System.out.println("Updated hand: " + player);
+                        } else {
+                            System.out.println("Hand stayed the same: " + player);
+                        }
+                    }
+                }
+
+                if (!roundWinners.isEmpty()) {
+                    gameWon = true;
+                    System.out.println("Round completed. Calculating points...");
+                    int points = 1 / roundWinners.size();
+                    for (Player winner : roundWinners) {
+                        winner.addPoint(points);
+                        System.out.println(winner.getName() + " awarded " + points + " point(s). Total points: " + winner.getPoints());
                     }
                 }
             }
 
-            if (!roundWinners.isEmpty()) {
-                gameWon = true;
-                System.out.println("Round completed. Calculating points...");
-                int points = 1 / roundWinners.size();
-                for (Player winner : roundWinners) {
-                    winner.addPoint(points);
-                    System.out.println(winner.getName() + " awarded " + points + " point(s). Total points: " + winner.getPoints());
-                }
+            if (!gameWon) {
+                System.out.println("No one scored 21 and there are not enough cards left for another round. Game ends in a draw.");
             }
         }
 
-        if (!gameWon) {
-            System.out.println("No one scored 21 and there are not enough cards left for another round. Game ends in a draw.");
+        // Display final scores
+        System.out.println("\nFinal Scores:");
+        players.sort((p1, p2) -> Integer.compare(p2.getPoints(), p1.getPoints()));
+        for (Player player : players) {
+            System.out.println(player.getName() + ": " + player.getPoints() + " points");
         }
     }
 }
