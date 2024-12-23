@@ -30,6 +30,7 @@ public class Main {
         }
 
         boolean gameWon = false;
+        List<Player> roundWinners = new ArrayList<>();
         while (!gameWon && deck.remainingCards() >= players.size()) {
             for (Player player : players) {
                 System.out.println(player);
@@ -37,11 +38,9 @@ public class Main {
                 System.out.println("Maximum score from a single suit: " + maxSuitScore.getValue() + " (Suit: " + maxSuitScore.getKey() + ")");
 
                 if (maxSuitScore.getValue() == 21) {
-                    System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and may win if no one ties!");
-                    gameWon = true;
-                }
-
-                if (!gameWon) {
+                    System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!");
+                    roundWinners.add(player);
+                } else {
                     System.out.println("Would you like to swap a card? (yes/no)");
                     String choice = scanner.nextLine().trim().toLowerCase();
 
@@ -63,8 +62,14 @@ public class Main {
                 }
             }
 
-            if (gameWon) {
-                System.out.println("Round completed. Everyone had the same number of turns.");
+            if (!roundWinners.isEmpty()) {
+                gameWon = true;
+                System.out.println("Round completed. Calculating points...");
+                int points = 1 / roundWinners.size();
+                for (Player winner : roundWinners) {
+                    winner.addPoint(points);
+                    System.out.println(winner.getName() + " awarded " + points + " point(s). Total points: " + winner.getPoints());
+                }
             }
         }
 

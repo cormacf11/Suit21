@@ -3,10 +3,12 @@ import java.util.*;
 public class Player {
     private String name;
     private List<Card> hand;
+    private int points;
 
     public Player(String name) {
         this.name = name;
         this.hand = new ArrayList<>();
+        this.points = 0;
     }
 
     public void setHand(List<Card> hand) {
@@ -19,6 +21,14 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void addPoint(int points) {
+        this.points += points;
     }
 
     public Card swapCard(int index, Card newCard) {
