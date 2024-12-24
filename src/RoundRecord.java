@@ -4,13 +4,21 @@ public class RoundRecord {
     private String playerName;
     private List<Card> hand;
     private Map.Entry<String, Integer> maxSuitScore;
-    private String decision;
+    private Card removedCard;
+    private Card newCard;
 
-    public RoundRecord(String playerName, List<Card> hand, Map.Entry<String, Integer> maxSuitScore, String decision) {
+    public RoundRecord(
+            String playerName,
+            List<Card> hand,
+            Map.Entry<String, Integer> maxSuitScore,
+            Card removedCard,
+            Card newCard
+    ) {
         this.playerName = playerName;
         this.hand = hand;
         this.maxSuitScore = maxSuitScore;
-        this.decision = decision;
+        this.removedCard = removedCard;
+        this.newCard = newCard;
     }
 
     public String getPlayerName() {
@@ -21,17 +29,31 @@ public class RoundRecord {
         return hand;
     }
 
-    public String getDecision() {
-        return decision;
-    }
-
     public Map.Entry<String, Integer> getMaxSuitScore() {
         return maxSuitScore;
     }
 
+    public Card getRemovedCard() {
+        return removedCard;
+    }
+
+    public Card getNewCard() {
+        return newCard;
+    }
 
     @Override
     public String toString() {
-        return playerName + "'s hand: " + hand + " | Maximum score: " + maxSuitScore.getValue() + " (" + maxSuitScore.getKey() + ") | Decision: " + decision;
+        StringBuilder sb = new StringBuilder();
+        sb.append(playerName).append("'s hand: ").append(hand);
+        sb.append(" | Maximum score: ").append(maxSuitScore.getValue())
+                .append(" (").append(maxSuitScore.getKey()).append(")");
+
+        if (removedCard != null && newCard != null) {
+            sb.append(" | Swapped out ").append(removedCard)
+                    .append(" for ").append(newCard);
+        } else {
+            sb.append(" | No swap");
+        }
+        return sb.toString();
     }
 }

@@ -52,30 +52,41 @@ public class Main {
             int roundNumber = 1;
 
             while (!gameWon && deck.remainingCards() >= players.size()) {
-                System.out.println("\n--- Round " + roundNumber + " ---");
 
                 List<RoundRecord> currentRoundRecords = new ArrayList<>();
 
                 for (Player player : players) {
+                    System.out.println("\n--- Round " + roundNumber + " ---");
                     System.out.println("\nCurrent Player: " + player.getName());
                     displayPlayerHand(player);
                     System.out.println();
+
                     Map.Entry<String, Integer> maxSuitScore = player.getMaxScoreAndSuit();
                     System.out.println("Your suit scores:");
                     displaySuitScores(player);
                     System.out.println();
 
-                    String decision = "kept their hand";
+                    // Use makeDecision() to see if a swap happened
+                    Card[] swapInfo = player.makeDecision(deck);
+                    Card removedCard = swapInfo[0];
+                    Card newCard = swapInfo[1];
+
+                    // Check if the player has 21 in their best suit
                     if (maxSuitScore.getValue() == 21) {
                         System.out.println(player.getName() + " has scored 21 in " + maxSuitScore.getKey() + " and is in contention to win!");
                         roundWinners.add(player);
-                    } else {
-                        player.makeDecision(deck);
-                        decision = "swapped a card";
                     }
 
-                    // Record round data
-                    currentRoundRecords.add(new RoundRecord(player.getName(), new ArrayList<>(player.getHand()), maxSuitScore, decision));
+                    // Record round data with swapped card details
+                    currentRoundRecords.add(
+                            new RoundRecord(
+                                    player.getName(),
+                                    new ArrayList<>(player.getHand()),
+                                    maxSuitScore,
+                                    removedCard,
+                                    newCard
+                            )
+                    );
                 }
 
                 roundHistory.add(currentRoundRecords);
@@ -162,15 +173,17 @@ public class Main {
 
         // Replay each round
         for (List<RoundRecord> roundRecords : roundHistory) {
-            System.out.println("\n--- Round " + roundNumber + " ---");
             for (RoundRecord record : roundRecords) {
+                System.out.println("\n--- Round " + roundNumber + " ---");
                 System.out.println("\nCurrent Player: " + record.getPlayerName());
                 displayReplayHand(record.getHand());
                 System.out.println();
                 System.out.println("Your suit scores:");
                 displayReplaySuitScores(record.getHand());
                 System.out.println();
-                System.out.println("Decision: " + record.getDecision());
+
+                // Show the swap info (or lack thereof)
+                displayReplaySwapInfo(record);
 
                 // Track the points for potential winners
                 if (!playerPoints.containsKey(record.getPlayerName())) {
@@ -220,5 +233,14 @@ public class Main {
             suitScores.put(card.getSuit(), suitScores.getOrDefault(card.getSuit(), 0) + card.getValue());
         }
         return suitScores;
+    }
+
+    private static void displayReplaySwapInfo(RoundRecord record) {
+        if (record.getRemovedCard() != null && record.getNewCard() != null) {
+            System.out.println(record.getPlayerName() + " swapped out "
+                    + record.getRemovedCard() + " for " + record.getNewCard());
+        } else {
+            System.out.println(record.getPlayerName() + " did not swap any card this round.");
+        }
     }
 }

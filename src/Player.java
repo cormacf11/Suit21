@@ -44,10 +44,17 @@ public class Player {
         return suitScores.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);
     }
 
-    public void makeDecision(Deck deck) {
+    /**
+     * @return an array of size 2: [removedCard, newCard].
+     * If no swap was made, both elements will be null.
+     */
+    public Card[] makeDecision(Deck deck) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Would you like to swap a card? (yes/no)");
         String choice = scanner.nextLine().trim().toLowerCase();
+
+        Card removedCard = null;
+        Card newCard = null;
 
         if (choice.equals("yes")) {
             System.out.println("Please nominate a card to swap (A-E): ");
@@ -59,13 +66,18 @@ public class Player {
                 cardIndex = cardChoice - 'A';
             } while (cardIndex < 0 || cardIndex >= getHand().size());
 
-            Card newCard = deck.dealHand(1).get(0);
-            Card removedCard = swapCard(cardIndex, newCard);
-            System.out.println("Swapped out " + removedCard + " for " + newCard);
+            newCard = deck.dealHand(1).get(0);
+            removedCard = swapCard(cardIndex, newCard);
+
+            // Announce the swap here (for the main gameplay).
+            System.out.println(getName() + " swapped out " + removedCard + " for " + newCard);
             System.out.println("Updated hand: " + this);
         } else {
-            System.out.println("Hand stayed the same: " + this);
+            System.out.println("No swap. Hand stayed the same: " + this);
         }
+
+        // Return an array so we can log it later in RoundRecord
+        return new Card[]{removedCard, newCard};
     }
 
     @Override
