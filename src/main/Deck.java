@@ -1,3 +1,5 @@
+package main;
+
 import java.util.*;
 
 public class Deck {
@@ -29,5 +31,9 @@ public class Deck {
 
     public int remainingCards() {
         return cards.size();
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 }

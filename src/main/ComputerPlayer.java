@@ -1,3 +1,5 @@
+package main;
+
 import java.util.*;
 
 public class ComputerPlayer extends Player {
@@ -59,7 +61,7 @@ public class ComputerPlayer extends Player {
         }
     }
 
-    private Map<String, Integer> calculateSuitScores() {
+    public Map<String, Integer> calculateSuitScores() {
         Map<String, Integer> suitScores = new HashMap<>();
         for (Card card : getHand()) {
             suitScores.put(
@@ -70,7 +72,7 @@ public class ComputerPlayer extends Player {
         return suitScores;
     }
 
-    private Card chooseCardToDiscard(String targetSuit) {
+    public Card chooseCardToDiscard(String targetSuit) {
         List<Card> hand = getHand();
 
         // First, try to discard a card that isn’t in the target suit

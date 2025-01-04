@@ -1,6 +1,10 @@
+package main;
+
 import java.util.*;
 
 public class Main {
+    private static List<Player> players;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -40,7 +44,6 @@ public class Main {
             // Create and shuffle the deck
             Deck deck = new Deck();
             deck.shuffle();
-
             // Deal 5 cards to each player
             for (Player player : players) {
                 player.setHand(deck.dealHand(5));
@@ -211,6 +214,10 @@ public class Main {
         for (String winner : winners) {
             System.out.println(winner + " with " + maxPoints + " point(s)");
         }
+    }
+
+    public static List<Player> getPlayers() {
+        return players;
     }
 
     private static void displayReplayHand(List<Card> hand) {
